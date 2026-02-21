@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
+import { SignalrService } from '../../services/signalr.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +15,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
+    private signalrService: SignalrService,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -29,6 +31,16 @@ export class DashboardComponent implements OnInit {
         this.loading = false;
         this.cdr.detectChanges();
       },
+    });
+
+    this.signalrService.startConnection();
+    this.signalrService.pingReceived$.subscribe((ping) => {
+      const endpoint = this.endpoints.find((e) => e.id === ping.endpointId);
+      if (endpoint) {
+        endpoint.latestPing = ping;
+        endpoint.uptimePercent = ping.isUp ? 100 : 0;
+        this.cdr.detectChanges();
+      }
     });
   }
 

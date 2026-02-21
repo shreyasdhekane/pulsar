@@ -20,6 +20,7 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 // Seed featured endpoints
@@ -45,6 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAngular");
+app.MapHub<Pulsar.API.Hubs.PulsarHub>("/hubs/pulsar");
 app.MapOpenApi();
 app.MapControllers();
 app.Run();

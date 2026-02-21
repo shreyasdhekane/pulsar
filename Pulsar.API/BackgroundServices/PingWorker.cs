@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Pulsar.API.Data;
 using Pulsar.API.Models;
 using System.Diagnostics;
+using Microsoft.AspNetCore.SignalR;
+using Pulsar.API.Hubs;
 
 namespace Pulsar.API.BackgroundServices;
 
@@ -10,11 +12,13 @@ public class PingWorker : BackgroundService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<PingWorker> _logger;
     private readonly HttpClient _httpClient;
+    private readonly IHubContext<PulsarHub> _hubContext;
 
-    public PingWorker(IServiceScopeFactory scopeFactory, ILogger<PingWorker> logger)
+    public PingWorker(IServiceScopeFactory scopeFactory, ILogger<PingWorker> logger, IHubContext<PulsarHub> hubContext)
     {
         _scopeFactory = scopeFactory;
         _logger = logger;
+        _hubContext = hubContext;
         _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
     }
 
@@ -25,7 +29,7 @@ public class PingWorker : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             await PingAllEndpointsAsync();
-            await Task.Delay(TimeSpan.FromSeconds(60), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
         }
     }
 
@@ -57,6 +61,14 @@ public class PingWorker : BackgroundService
                 _logger.LogInformation(
                     "Pinged {Name}: {StatusCode} in {Ms}ms",
                     endpoint.Name, result.StatusCode, result.ResponseTimeMs);
+
+                await _hubContext.Clients.All.SendAsync("ReceivePingResult", new {
+                    endpointId = endpoint.Id,
+                    statusCode = result.StatusCode,
+                    responseTimeMs = result.ResponseTimeMs,
+                    isUp = result.IsUp,
+                    timestamp = result.Timestamp
+                });
             }
             catch (Exception ex)
             {
