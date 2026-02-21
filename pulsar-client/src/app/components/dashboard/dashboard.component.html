@@ -1,6 +1,6 @@
 <div class="dashboard">
   <header>
-    <h1>Pulsar</h1>
+    <h1>⚡ Pulsar</h1>
     <p>Real-time API Health Monitoring</p>
   </header>
 
@@ -28,6 +28,11 @@
               <span class="label">Uptime</span>
               <span class="value">{{ endpoint.uptimePercent }}%</span>
             </div>
+          </div>
+          <app-sparkline [pings]="endpoint.recentPings" [isUp]="endpoint.latestPing?.isUp">
+          </app-sparkline>
+          <div class="last-checked">
+            Last checked: {{ getTimeAgo(endpoint.latestPing?.timestamp) }}
           </div>
         </div>
       }

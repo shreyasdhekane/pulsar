@@ -42,6 +42,28 @@
     &:hover {
       transform: translateY(-4px);
     }
+    .sparkline {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 44px;
+      margin-top: 16px;
+      padding-top: 4px;
+      border-top: 1px solid #2a2a3a;
+
+      .bar {
+        flex: 1;
+        border-radius: 2px;
+        transition: height 0.3s ease;
+        min-height: 4px;
+      }
+    }
+
+    .last-checked {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #555;
+    }
 
     .card-header {
       display: flex;
