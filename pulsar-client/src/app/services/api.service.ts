@@ -12,4 +12,7 @@ export class ApiService {
   getFeaturedEndpoints(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/api/endpoints/featured`);
   }
+  getStats(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/endpoints/stats`);
+  }
 }

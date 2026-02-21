@@ -1,18 +1,20 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
+import { DecimalPipe } from '@angular/common';
 import { SignalrService } from '../../services/signalr.service';
 import { SparklineComponent } from '../sparkline/sparkline.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [SparklineComponent],
+  imports: [SparklineComponent, DecimalPipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
   endpoints: any[] = [];
   loading = true;
+  stats: any = null;
 
   constructor(
     private apiService: ApiService,
@@ -21,6 +23,11 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.apiService.getStats().subscribe((data) => {
+      this.stats = data;
+      this.cdr.detectChanges();
+    });
+
     this.apiService.getFeaturedEndpoints().subscribe({
       next: (data) => {
         this.endpoints = data;

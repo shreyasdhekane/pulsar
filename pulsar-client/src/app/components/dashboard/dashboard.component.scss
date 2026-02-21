@@ -108,6 +108,44 @@
       }
     }
   }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    background: #13131a;
+    border: 1px solid #2a2a3a;
+    border-radius: 16px;
+    padding: 24px 48px;
+    max-width: 800px;
+    margin: 0 auto 48px;
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+
+      .stat-value {
+        font-size: 32px;
+        font-weight: 800;
+        color: #6c63ff;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+
+    .divider {
+      width: 1px;
+      height: 40px;
+      background: #2a2a3a;
+    }
+  }
 }
 
 @keyframes pulse {

@@ -42,4 +42,29 @@ public class EndpointsController : ControllerBase
 
         return Ok(endpoints);
     }
+    
+    [HttpGet("stats")]
+    public async Task<IActionResult> GetStats()
+    {
+        var totalEndpoints = await _db.MonitoredEndpoints.CountAsync(e => e.IsFeatured);
+        var totalPingsToday = await _db.PingResults
+            .Where(p => p.Timestamp >= DateTime.UtcNow.AddHours(-24))
+            .CountAsync();
+        var upPings = await _db.PingResults
+            .Where(p => p.Timestamp >= DateTime.UtcNow.AddHours(-24) && p.IsUp)
+            .CountAsync();
+        var avgUptime = totalPingsToday > 0
+            ? Math.Round(upPings * 100.0 / totalPingsToday, 1)
+            : 0;
+        var avgResponseTime = await _db.PingResults
+            .Where(p => p.Timestamp >= DateTime.UtcNow.AddHours(-24) && p.IsUp)
+            .AverageAsync(p => (double?)p.ResponseTimeMs) ?? 0;
+
+        return Ok(new {
+            totalEndpoints,
+            totalPingsToday,
+            avgUptimePercent = avgUptime,
+            avgResponseTimeMs = Math.Round(avgResponseTime)
+        });
+    }
 }
