@@ -1,0 +1,17 @@
+# User secrets / connection strings
+**/appsettings.Development.json
+
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+.vs/
+
+# Angular
+**/node_modules/
+**/dist/
+
+# OS
+.DS_Store
+Thumbs.db
