@@ -3,6 +3,7 @@ import { ApiService } from '../../services/api.service';
 import { DecimalPipe } from '@angular/common';
 import { SignalrService } from '../../services/signalr.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SparklineComponent } from '../sparkline/sparkline.component';
 
 @Component({
@@ -33,6 +34,7 @@ export class DashboardComponent implements OnInit {
     private apiService: ApiService,
     private signalrService: SignalrService,
     private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -98,5 +100,8 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => console.error('Failed to add endpoint', err),
     });
+  }
+  goToDetail(id: number) {
+    this.router.navigate(['/endpoint', id]);
   }
 }

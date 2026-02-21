@@ -1,0 +1,67 @@
+<div class="detail-page">
+  <nav class="navbar">
+    <div class="logo">
+      <span class="logo-text">Pulsar</span>
+    </div>
+    <div class="back-btn" (click)="goBack()">← Back to Dashboard</div>
+  </nav>
+
+  @if (loading) {
+    <div class="loading">Loading endpoint data...</div>
+  }
+
+  @if (!loading && endpoint) {
+    <div class="detail-header">
+      <div class="header-top">
+        <span class="dot" [style.background]="getStatusColor()"></span>
+        <h1>{{ endpoint.name }}</h1>
+        <span
+          class="status-badge"
+          [style.color]="getStatusColor()"
+          [style.border-color]="getStatusColor()"
+        >
+          {{ endpoint.latestPing?.isUp ? 'Operational' : 'Down' }}
+        </span>
+      </div>
+      <p class="url">{{ endpoint.url }}</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">Uptime (All Time)</div>
+        <div class="value purple">{{ endpoint.uptimePercent }}%</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Avg Response</div>
+        <div class="value green">{{ endpoint.avgResponseTime }}ms</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Fastest</div>
+        <div class="value yellow">{{ endpoint.minResponseTime }}ms</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Slowest</div>
+        <div class="value red">{{ endpoint.maxResponseTime }}ms</div>
+      </div>
+    </div>
+
+    <div class="uptime-section">
+      <div class="section-label">24-Hour Uptime Timeline</div>
+      <div class="uptime-bars">
+        @for (bar of uptimeBars; track $index) {
+          <div class="bar" [class]="bar.status" [title]="bar.label"></div>
+        }
+      </div>
+      <div class="uptime-labels">
+        <span>24h ago</span>
+        <span>12h ago</span>
+        <span>Now</span>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="section-label">Response Time — Last 24 Hours</div>
+      <canvas id="detailChart"></canvas>
+    </div>
+  }
+</div>

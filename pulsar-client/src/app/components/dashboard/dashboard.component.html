@@ -1,40 +1,45 @@
 <div class="dashboard">
-  <header>
-    <h1>Pulsar</h1>
-    <p>Real-time API Health Monitoring</p>
-  </header>
+  <nav class="navbar">
+    <div class="logo">
+      <h2 class="logo-text">Pulsar</h2>
+    </div>
+    <div class="nav-badge">
+      <span class="live-dot"></span>
+      Live Monitoring
+    </div>
+  </nav>
+
+  @if (stats) {
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-label">APIs Monitored</div>
+        <div class="stat-value purple">{{ stats.totalEndpoints }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Uptime (24h)</div>
+        <div class="stat-value green">{{ stats.avgUptimePercent }}%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Response</div>
+        <div class="stat-value red">{{ stats.avgResponseTimeMs }}ms</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pings Today</div>
+        <div class="stat-value yellow">{{ stats.totalPingsToday | number }}</div>
+      </div>
+    </div>
+  }
+
+  <div class="section-title">Monitored Endpoints</div>
 
   @if (loading) {
     <div class="loading">Connecting to APIs...</div>
-  }
-  @if (stats) {
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-value">{{ stats.totalEndpoints }}</span>
-        <span class="stat-label">APIs Monitored</span>
-      </div>
-      <div class="divider"></div>
-      <div class="stat">
-        <span class="stat-value">{{ stats.avgUptimePercent }}%</span>
-        <span class="stat-label">Avg Uptime (24h)</span>
-      </div>
-      <div class="divider"></div>
-      <div class="stat">
-        <span class="stat-value">{{ stats.avgResponseTimeMs }}ms</span>
-        <span class="stat-label">Avg Response Time</span>
-      </div>
-      <div class="divider"></div>
-      <div class="stat">
-        <span class="stat-value">{{ stats.totalPingsToday | number }}</span>
-        <span class="stat-label">Pings Today</span>
-      </div>
-    </div>
   }
 
   @if (!loading) {
     <div class="grid">
       @for (endpoint of endpoints; track endpoint.id) {
-        <div class="card">
+        <div class="card" (click)="goToDetail(endpoint.id)">
           <div class="card-header">
             <span class="dot" [style.background]="getStatusColor(endpoint)"></span>
             <h2>{{ endpoint.name }}</h2>
@@ -44,7 +49,7 @@
           </div>
           <div class="metrics">
             <div class="metric">
-              <span class="label">Response Time</span>
+              <span class="label">Response</span>
               <span class="value">{{ endpoint.latestPing?.responseTimeMs ?? '—' }}ms</span>
             </div>
             <div class="metric">
@@ -55,16 +60,18 @@
           <app-sparkline [pings]="endpoint.recentPings" [isUp]="endpoint.latestPing?.isUp">
           </app-sparkline>
           <div class="last-checked">
-            Last checked: {{ getTimeAgo(endpoint.latestPing?.timestamp) }}
+            {{ getTimeAgo(endpoint.latestPing?.timestamp) }}
           </div>
         </div>
       }
+
       <div class="card add-card" (click)="openModal()">
         <div class="add-icon">+</div>
-        <p>Monitor a custom API</p>
+        <p>Monitor custom API</p>
       </div>
     </div>
   }
+
   @if (showModal) {
     <div class="modal-overlay" (click)="closeModal()">
       <div class="modal" (click)="$event.stopPropagation()">

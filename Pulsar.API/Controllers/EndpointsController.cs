@@ -72,6 +72,12 @@ public class EndpointsController : ControllerBase
     [HttpPost("custom")]
     public async Task<IActionResult> AddCustomEndpoint([FromBody] AddEndpointDto dto)
     {
+        if (!dto.Url.StartsWith("https://") && !dto.Url.StartsWith("http://"))
+            return BadRequest("URL must start with http:// or https://");
+
+        if (dto.Url.Contains("localhost") || dto.Url.Contains("192.168") || dto.Url.Contains("127.0.0.1"))
+            return BadRequest("Private URLs are not allowed");
+            
         var endpoint = new MonitoredEndpoint
         {
             Name = dto.Name,
@@ -82,6 +88,43 @@ public class EndpointsController : ControllerBase
         };
         _db.MonitoredEndpoints.Add(endpoint);
         await _db.SaveChangesAsync();
+        return Ok(endpoint);
+    }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetEndpointDetail(int id)
+    {
+        var endpoint = await _db.MonitoredEndpoints
+            .Where(e => e.Id == id)
+            .Select(e => new
+            {
+                e.Id,
+                e.Name,
+                e.Url,
+                LatestPing = e.PingResults
+                    .OrderByDescending(p => p.Timestamp)
+                    .Select(p => new { p.StatusCode, p.ResponseTimeMs, p.IsUp, p.Timestamp })
+                    .FirstOrDefault(),
+                UptimePercent = e.PingResults.Any()
+                    ? Math.Round(e.PingResults.Count(p => p.IsUp) * 100.0 / e.PingResults.Count(), 1)
+                    : 0,
+                AvgResponseTime = e.PingResults.Any()
+                    ? Math.Round(e.PingResults.Average(p => (double)p.ResponseTimeMs), 0)
+                    : 0,
+                MinResponseTime = e.PingResults.Any()
+                    ? e.PingResults.Min(p => p.ResponseTimeMs)
+                    : 0,
+                MaxResponseTime = e.PingResults.Any()
+                    ? e.PingResults.Max(p => p.ResponseTimeMs)
+                    : 0,
+                Last24Hours = e.PingResults
+                    .Where(p => p.Timestamp >= DateTime.UtcNow.AddHours(-24))
+                    .OrderBy(p => p.Timestamp)
+                    .Select(p => new { p.ResponseTimeMs, p.IsUp, p.Timestamp })
+                    .ToList()
+            })
+            .FirstOrDefaultAsync();
+
+        if (endpoint == null) return NotFound();
         return Ok(endpoint);
     }
 }
