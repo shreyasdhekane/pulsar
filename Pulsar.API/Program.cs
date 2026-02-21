@@ -11,6 +11,15 @@ builder.Services.AddDbContext<PulsarDbContext>(options =>
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddHostedService<Pulsar.API.BackgroundServices.PingWorker>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 // Seed featured endpoints
@@ -30,12 +39,12 @@ using (var scope = app.Services.CreateScope())
         await db.SaveChangesAsync();
     }
 }
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowAngular");
+app.MapOpenApi();
 app.MapControllers();
 app.Run();

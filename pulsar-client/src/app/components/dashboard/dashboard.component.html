@@ -1,0 +1,36 @@
+<div class="dashboard">
+  <header>
+    <h1>Pulsar</h1>
+    <p>Real-time API Health Monitoring</p>
+  </header>
+
+  @if (loading) {
+    <div class="loading">Connecting to APIs...</div>
+  }
+
+  @if (!loading) {
+    <div class="grid">
+      @for (endpoint of endpoints; track endpoint.id) {
+        <div class="card">
+          <div class="card-header">
+            <span class="dot" [style.background]="getStatusColor(endpoint)"></span>
+            <h2>{{ endpoint.name }}</h2>
+            <span class="status-label" [style.color]="getStatusColor(endpoint)">
+              {{ getStatusLabel(endpoint) }}
+            </span>
+          </div>
+          <div class="metrics">
+            <div class="metric">
+              <span class="label">Response Time</span>
+              <span class="value">{{ endpoint.latestPing?.responseTimeMs ?? '—' }}ms</span>
+            </div>
+            <div class="metric">
+              <span class="label">Uptime</span>
+              <span class="value">{{ endpoint.uptimePercent }}%</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
