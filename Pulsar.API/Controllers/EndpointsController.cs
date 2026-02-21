@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Pulsar.API.Models;
 using Pulsar.API.Data;
+using Pulsar.API.DTOs;
 
 namespace Pulsar.API.Controllers;
 
@@ -66,5 +68,20 @@ public class EndpointsController : ControllerBase
             avgUptimePercent = avgUptime,
             avgResponseTimeMs = Math.Round(avgResponseTime)
         });
+    }
+    [HttpPost("custom")]
+    public async Task<IActionResult> AddCustomEndpoint([FromBody] AddEndpointDto dto)
+    {
+        var endpoint = new MonitoredEndpoint
+        {
+            Name = dto.Name,
+            Url = dto.Url,
+            IsFeatured = false,
+            IsPublic = true,
+            IntervalSeconds = 60
+        };
+        _db.MonitoredEndpoints.Add(endpoint);
+        await _db.SaveChangesAsync();
+        return Ok(endpoint);
     }
 }

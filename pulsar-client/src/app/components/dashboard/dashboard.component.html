@@ -59,6 +59,23 @@
           </div>
         </div>
       }
+      <div class="card add-card" (click)="openModal()">
+        <div class="add-icon">+</div>
+        <p>Monitor a custom API</p>
+      </div>
+    </div>
+  }
+  @if (showModal) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Monitor a Custom API</h3>
+        <input placeholder="Name (e.g. My Backend)" [(ngModel)]="newName" />
+        <input placeholder="URL (e.g. https://api.mysite.com/health)" [(ngModel)]="newUrl" />
+        <div class="modal-actions">
+          <button class="cancel" (click)="closeModal()">Cancel</button>
+          <button class="submit" (click)="submitEndpoint()">Add Monitor</button>
+        </div>
+      </div>
     </div>
   }
 </div>

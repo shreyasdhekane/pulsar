@@ -15,4 +15,7 @@ export class ApiService {
   getStats(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/api/endpoints/stats`);
   }
+  addCustomEndpoint(name: string, url: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/endpoints/custom`, { name, url });
+  }
 }

@@ -29,7 +29,7 @@ public class PingWorker : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             await PingAllEndpointsAsync();
-            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(60), stoppingToken);
         }
     }
 

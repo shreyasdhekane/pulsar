@@ -2,12 +2,13 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { DecimalPipe } from '@angular/common';
 import { SignalrService } from '../../services/signalr.service';
+import { FormsModule } from '@angular/forms';
 import { SparklineComponent } from '../sparkline/sparkline.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [SparklineComponent, DecimalPipe],
+  imports: [SparklineComponent, DecimalPipe, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -15,6 +16,18 @@ export class DashboardComponent implements OnInit {
   endpoints: any[] = [];
   loading = true;
   stats: any = null;
+  showModal = false;
+  newName = '';
+  newUrl = '';
+
+  openModal() {
+    this.showModal = true;
+  }
+  closeModal() {
+    this.showModal = false;
+    this.newName = '';
+    this.newUrl = '';
+  }
 
   constructor(
     private apiService: ApiService,
@@ -71,5 +84,19 @@ export class DashboardComponent implements OnInit {
   getStatusLabel(endpoint: any): string {
     if (!endpoint.latestPing) return 'Unknown';
     return endpoint.latestPing.isUp ? 'Operational' : 'Down';
+  }
+  submitEndpoint() {
+    if (!this.newName || !this.newUrl) return;
+    this.apiService.addCustomEndpoint(this.newName, this.newUrl).subscribe({
+      next: (endpoint) => {
+        endpoint.recentPings = [];
+        endpoint.latestPing = null;
+        endpoint.uptimePercent = 0;
+        this.endpoints.push(endpoint);
+        this.closeModal();
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Failed to add endpoint', err),
+    });
   }
 }
