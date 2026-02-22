@@ -30,7 +30,14 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PulsarDbContext>();
-    db.Database.Migrate();
+    try
+        {
+            db.Database.Migrate();
+        }
+    catch (Exception ex)
+        {
+            Console.WriteLine("Migration failed: " + ex.Message);
+        }
 }
 
 using (var scope = app.Services.CreateScope())
@@ -57,4 +64,5 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAngular");
 app.MapHub<Pulsar.API.Hubs.PulsarHub>("/hubs/pulsar");
 app.MapControllers();
-app.Run();
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");
