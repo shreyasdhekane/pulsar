@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PulsarDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Services container configuration
+
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddHostedService<Pulsar.API.BackgroundServices.PingWorker>();
@@ -22,8 +22,13 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSignalR();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PulsarDbContext>();
+    db.Database.Migrate();
+}
+
 var app = builder.Build();
-// Seed featured endpoints
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PulsarDbContext>();
