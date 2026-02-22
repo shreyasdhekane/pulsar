@@ -6,8 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<PulsarDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetValue<string>("ConnectionStrings:ConnectionString") 
-    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseNpgsql(connectionString);
 });
 
