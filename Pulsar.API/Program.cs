@@ -22,13 +22,15 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSignalR();
 
+
+
+var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PulsarDbContext>();
     db.Database.Migrate();
 }
 
-var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PulsarDbContext>();
@@ -52,6 +54,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAngular");
 app.MapHub<Pulsar.API.Hubs.PulsarHub>("/hubs/pulsar");
-app.MapOpenApi();
 app.MapControllers();
 app.Run();
