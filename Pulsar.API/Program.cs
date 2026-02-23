@@ -22,7 +22,7 @@ builder.Services.AddCors(options =>
     {
        policy.WithOrigins(
             "http://localhost:4200",
-            "https://pulsar-of1bjwzg3-shreyasdhekanes-projects.vercel.app"
+            "https://pulsar-qhltpncq7-shreyasdhekanes-projects.vercel.app"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
