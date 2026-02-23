@@ -27,5 +27,10 @@ public class PulsarDbContext : DbContext
             .WithMany(e => e.PingResults)
             .HasForeignKey(p => p.EndpointId)
             .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<MonitoredEndpoint>()
+            .HasOne<User>()
+            .WithMany(u => u.Endpoints)
+            .HasForeignKey(e => e.UserId)
+            .IsRequired(false);
     }
 }

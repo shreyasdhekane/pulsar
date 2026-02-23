@@ -1,6 +1,9 @@
 using Pulsar.API.Data;
 using Pulsar.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +30,23 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSignalR();
 
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt__Issuer"],
+            ValidAudience = builder.Configuration["Jwt__Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt__Key"]!))
+        };
+    });
 
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
@@ -63,7 +82,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseCors("AllowAngular");
 app.MapHub<Pulsar.API.Hubs.PulsarHub>("/hubs/pulsar");
 app.MapControllers();

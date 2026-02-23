@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "ITEp6YGmNFc=",
+  "dgSpecHash": "WpybZP4VKqE=",
   "success": true,
-  "projectFilePath": "D:\\Progams\\pulsar\\Pulsar.API\\Pulsar.API.csproj",
+  "projectFilePath": "D:\\Progams\\pulsar\\pulsar.API\\Pulsar.API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Shreyas\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\Shreyas\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\Shreyas\\.nuget\\packages\\dapper.aot\\1.0.48\\dapper.aot.1.0.48.nupkg.sha512",
     "C:\\Users\\Shreyas\\.nuget\\packages\\hangfire.aspnetcore\\1.8.23\\hangfire.aspnetcore.1.8.23.nupkg.sha512",

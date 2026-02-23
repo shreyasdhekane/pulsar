@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Progams\\pulsar\\Pulsar.API\\Pulsar.API.csproj": {}
+    "D:\\Progams\\pulsar\\pulsar.API\\Pulsar.API.csproj": {}
   },
   "projects": {
-    "D:\\Progams\\pulsar\\Pulsar.API\\Pulsar.API.csproj": {
+    "D:\\Progams\\pulsar\\pulsar.API\\Pulsar.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Progams\\pulsar\\Pulsar.API\\Pulsar.API.csproj",
+        "projectUniqueName": "D:\\Progams\\pulsar\\pulsar.API\\Pulsar.API.csproj",
         "projectName": "Pulsar.API",
-        "projectPath": "D:\\Progams\\pulsar\\Pulsar.API\\Pulsar.API.csproj",
+        "projectPath": "D:\\Progams\\pulsar\\pulsar.API\\Pulsar.API.csproj",
         "packagesPath": "C:\\Users\\Shreyas\\.nuget\\packages\\",
-        "outputPath": "D:\\Progams\\pulsar\\Pulsar.API\\obj\\",
+        "outputPath": "D:\\Progams\\pulsar\\pulsar.API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Shreyas\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -44,6 +44,10 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            },
             "Hangfire.AspNetCore": {
               "target": "Package",
               "version": "[1.8.23, )"

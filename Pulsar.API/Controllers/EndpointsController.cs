@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Pulsar.API.Models;
 using Pulsar.API.Data;
 using Pulsar.API.DTOs;
@@ -44,7 +46,7 @@ public class EndpointsController : ControllerBase
 
         return Ok(endpoints);
     }
-    
+
     [HttpGet("stats")]
     public async Task<IActionResult> GetStats()
     {
@@ -69,27 +71,78 @@ public class EndpointsController : ControllerBase
             avgResponseTimeMs = Math.Round(avgResponseTime)
         });
     }
+
+    [HttpGet("my")]
+    [Authorize]
+    public async Task<IActionResult> GetMyEndpoints()
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var endpoints = await _db.MonitoredEndpoints
+            .Where(e => e.UserId == userId)
+            .Select(e => new
+            {
+                e.Id,
+                e.Name,
+                e.Url,
+                LatestPing = e.PingResults
+                    .OrderByDescending(p => p.Timestamp)
+                    .Select(p => new { p.StatusCode, p.ResponseTimeMs, p.IsUp, p.Timestamp })
+                    .FirstOrDefault(),
+                UptimePercent = e.PingResults.Any()
+                    ? Math.Round(e.PingResults.Count(p => p.IsUp) * 100.0 / e.PingResults.Count(), 1)
+                    : 0,
+                RecentPings = e.PingResults
+                    .OrderByDescending(p => p.Timestamp)
+                    .Take(20)
+                    .Select(p => new { p.ResponseTimeMs, p.IsUp, p.Timestamp })
+                    .ToList()
+            })
+            .ToListAsync();
+
+        return Ok(endpoints);
+    }
+
     [HttpPost("custom")]
+    [Authorize]
     public async Task<IActionResult> AddCustomEndpoint([FromBody] AddEndpointDto dto)
     {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
         if (!dto.Url.StartsWith("https://") && !dto.Url.StartsWith("http://"))
             return BadRequest("URL must start with http:// or https://");
 
         if (dto.Url.Contains("localhost") || dto.Url.Contains("192.168") || dto.Url.Contains("127.0.0.1"))
             return BadRequest("Private URLs are not allowed");
-            
+
         var endpoint = new MonitoredEndpoint
         {
             Name = dto.Name,
             Url = dto.Url,
+            UserId = userId,
             IsFeatured = false,
-            IsPublic = true,
+            IsPublic = false,
             IntervalSeconds = 60
         };
         _db.MonitoredEndpoints.Add(endpoint);
         await _db.SaveChangesAsync();
         return Ok(endpoint);
     }
+
+    [HttpDelete("{id}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteEndpoint(int id)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var endpoint = await _db.MonitoredEndpoints
+            .FirstOrDefaultAsync(e => e.Id == id && e.UserId == userId);
+
+        if (endpoint == null) return NotFound();
+
+        _db.MonitoredEndpoints.Remove(endpoint);
+        await _db.SaveChangesAsync();
+        return Ok();
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetEndpointDetail(int id)
     {
