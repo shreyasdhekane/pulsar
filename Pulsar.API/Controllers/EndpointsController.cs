@@ -106,6 +106,7 @@ public class EndpointsController : ControllerBase
         return Ok(endpoints);
     }
 
+
     [HttpPost("custom")]
     [Authorize]
     public async Task<IActionResult> AddCustomEndpoint([FromBody] AddEndpointDto dto)
@@ -131,6 +132,34 @@ public class EndpointsController : ControllerBase
         await _db.SaveChangesAsync();
         return Ok(endpoint);
     }
+
+    [HttpGet("{id}")]
+public async Task<IActionResult> GetEndpoint(int id)
+{
+    var endpoint = await _db.MonitoredEndpoints
+        .Where(e => e.Id == id)
+        .Select(e => new
+        {
+            e.Id,
+            e.Name,
+            e.Url,
+            e.IsFeatured,
+            e.IsPublic,
+            e.IntervalSeconds,
+            LatestPing = e.PingResults
+                .OrderByDescending(p => p.Timestamp)
+                .Select(p => new { p.StatusCode, p.ResponseTimeMs, p.IsUp, p.Timestamp })
+                .FirstOrDefault()
+        })
+        .FirstOrDefaultAsync();
+
+    if (endpoint == null)
+    {
+        return NotFound();
+    }
+
+    return Ok(endpoint);
+}
 
     [HttpDelete("{id}")]
     [Authorize]
