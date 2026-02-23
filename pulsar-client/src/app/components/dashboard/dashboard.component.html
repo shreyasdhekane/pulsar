@@ -135,4 +135,36 @@
   @if (showAuthModal) {
     <app-auth-modal (closed)="showAuthModal = false" (success)="onAuthSuccess()"></app-auth-modal>
   }
+  @if (auth.isLoggedIn() && myEndpoints.length > 0) {
+    <div class="section-title">My Endpoints</div>
+    <div class="grid">
+      @for (endpoint of myEndpoints; track endpoint.id) {
+        <div class="card" (click)="goToDetail(endpoint.id)">
+          <div class="card-header">
+            <span class="dot" [style.background]="getStatusColor(endpoint)"></span>
+            <h2>{{ endpoint.name }}</h2>
+            <span class="status-label" [style.color]="getStatusColor(endpoint)">
+              {{ getStatusLabel(endpoint) }}
+            </span>
+            <button class="delete-btn" (click)="deleteEndpoint(endpoint.id, $event)">✕</button>
+          </div>
+          <div class="metrics">
+            <div class="metric">
+              <span class="label">Response</span>
+              <span class="value">{{ endpoint.latestPing?.responseTimeMs ?? '—' }}ms</span>
+            </div>
+            <div class="metric">
+              <span class="label">Uptime</span>
+              <span class="value">{{ endpoint.uptimePercent }}%</span>
+            </div>
+          </div>
+          <app-sparkline [pings]="endpoint.recentPings" [isUp]="endpoint.latestPing?.isUp">
+          </app-sparkline>
+          <div class="last-checked">
+            {{ getTimeAgo(endpoint.latestPing?.timestamp) }}
+          </div>
+        </div>
+      }
+    </div>
+  }
 </div>

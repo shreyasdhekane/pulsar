@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   newName = '';
   newUrl = '';
   tickerItems: any[] = [];
+  myEndpoints: any[] = [];
 
   private map: L.Map | null = null;
   private pingLocations = [
@@ -70,22 +71,53 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     });
 
+    if (this.auth.isLoggedIn()) {
+      this.loadMyEndpoints();
+    }
+
     this.signalrService.startConnection();
     this.signalrService.pingReceived$.subscribe((ping) => {
       const endpoint = this.endpoints.find((e) => e.id === ping.endpointId);
       if (endpoint) {
         endpoint.latestPing = ping;
         endpoint.uptimePercent = ping.isUp ? 100 : 0;
-        // update ticker
         const tickerItem = this.tickerItems.find((t) => t.name === endpoint.name);
         if (tickerItem) {
           tickerItem.isUp = ping.isUp;
           tickerItem.responseTimeMs = ping.responseTimeMs;
         }
-        // flash a random map dot
         this.flashRandomPing(ping.isUp);
         this.cdr.detectChanges();
       }
+
+      // also update myEndpoints if it matches
+      const myEndpoint = this.myEndpoints.find((e) => e.id === ping.endpointId);
+      if (myEndpoint) {
+        myEndpoint.latestPing = ping;
+        myEndpoint.uptimePercent = ping.isUp ? 100 : 0;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  loadMyEndpoints() {
+    this.apiService.getMyEndpoints().subscribe({
+      next: (data) => {
+        this.myEndpoints = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Failed to fetch my endpoints', err),
+    });
+  }
+
+  deleteEndpoint(id: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.apiService.deleteEndpoint(id).subscribe({
+      next: () => {
+        this.myEndpoints = this.myEndpoints.filter((e) => e.id !== id);
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Failed to delete endpoint', err),
     });
   }
 
@@ -192,7 +224,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         endpoint.recentPings = [];
         endpoint.latestPing = null;
         endpoint.uptimePercent = 0;
-        this.endpoints.push(endpoint);
+        this.myEndpoints.push(endpoint);
         this.closeModal();
         this.cdr.detectChanges();
       },
@@ -207,6 +239,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   openModal() {
     this.showModal = true;
   }
+
   closeModal() {
     this.showModal = false;
     this.newName = '';
@@ -224,6 +257,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   onAuthSuccess() {
     this.showAuthModal = false;
     this.showModal = true;
+    this.loadMyEndpoints();
   }
 
   getBarHeight(responseTimeMs: number, pings: any[]): number {
