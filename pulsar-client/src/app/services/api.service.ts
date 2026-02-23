@@ -32,4 +32,7 @@ export class ApiService {
   deleteEndpoint(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/api/endpoints/${id}`);
   }
+  getInsights(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/endpoints/${id}/insights`);
+  }
 }

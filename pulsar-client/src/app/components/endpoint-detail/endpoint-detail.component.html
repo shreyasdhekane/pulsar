@@ -64,4 +64,61 @@
       <canvas id="detailChart"></canvas>
     </div>
   }
+  @if (insights) {
+    <!-- PERCENTILES -->
+    <div class="stats-grid" style="margin-top: 24px">
+      <div class="stat-card">
+        <div class="label">p50 Response</div>
+        <div class="value purple">{{ insights.p50 }}ms</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">p95 Response</div>
+        <div class="value yellow">{{ insights.p95 }}ms</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">p99 Response</div>
+        <div class="value red">{{ insights.p99 }}ms</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Anomaly</div>
+        <div class="value" [class]="insights.anomaly ? 'red' : 'green'">
+          {{ insights.anomaly ? insights.anomalyPercent + '% slower' : 'Normal' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- AI INSIGHTS -->
+    <div class="insights-card">
+      <div class="insights-header">
+        <span class="ai-badge">⚡ AI Insights</span>
+        @if (insights.anomaly) {
+          <span class="anomaly-badge">Anomaly Detected</span>
+        }
+      </div>
+      <p class="insights-text">{{ insights.summary }}</p>
+    </div>
+
+    <!-- INCIDENT TIMELINE -->
+    @if (insights.incidents.length > 0) {
+      <div class="incidents-section">
+        <div class="section-label">Incident History (24h)</div>
+        @for (incident of insights.incidents; track $index) {
+          <div class="incident-item">
+            <span class="incident-dot"></span>
+            <div class="incident-info">
+              <span class="incident-time">
+                {{ incident.from | date: 'HH:mm' }}
+                @if (incident.to) {
+                  → {{ incident.to | date: 'HH:mm' }}
+                } @else {
+                  → Ongoing
+                }
+              </span>
+              <span class="incident-duration">{{ incident.durationMinutes }} min downtime</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
 </div>

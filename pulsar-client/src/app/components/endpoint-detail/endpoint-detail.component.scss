@@ -270,6 +270,104 @@
   font-family: 'DM Mono', monospace;
   margin-top: 100px;
 }
+.insights-card {
+  background: rgba(108, 99, 255, 0.05);
+  border: 1px solid rgba(108, 99, 255, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 24px;
+
+  .insights-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .ai-badge {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: #6c63ff;
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    border-radius: 100px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .anomaly-badge {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 100px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .insights-text {
+    color: #aaa;
+    font-size: 14px;
+    line-height: 1.7;
+    font-family: 'DM Mono', monospace;
+  }
+}
+
+.incidents-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 24px;
+
+  .section-label {
+    font-size: 11px;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 16px;
+  }
+}
+
+.incident-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .incident-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff4444;
+    flex-shrink: 0;
+  }
+
+  .incident-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .incident-time {
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: #fff;
+  }
+
+  .incident-duration {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: #555;
+  }
+}
 
 @keyframes pulse {
   0%,

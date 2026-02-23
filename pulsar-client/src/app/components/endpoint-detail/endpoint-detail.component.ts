@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { DatePipe } from '@angular/common';
 import {
   Chart,
   LineController,
@@ -25,7 +26,7 @@ Chart.register(
 @Component({
   selector: 'app-endpoint-detail',
   standalone: true,
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './endpoint-detail.component.html',
   styleUrl: './endpoint-detail.component.scss',
 })
@@ -33,6 +34,8 @@ export class EndpointDetailComponent implements OnInit {
   endpoint: any = null;
   loading = true;
   uptimeBars: { status: string; label: string }[] = [];
+  insights: any = null;
+  insightsLoading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,6 +57,17 @@ export class EndpointDetailComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.loading = false;
+      },
+    });
+    this.apiService.getInsights(Number(id)).subscribe({
+      next: (data) => {
+        this.insights = data;
+        this.insightsLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.insightsLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }
