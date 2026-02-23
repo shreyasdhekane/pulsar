@@ -21,11 +21,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngular", policy =>
     {
        policy.WithOrigins(
-    "http://localhost:4200",
-    "https://pulsar-of1bjwzg3-shreyasdhekanes-projects.vercel.app"
-)
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+            "http://localhost:4200",
+            "https://pulsar-of1bjwzg3-shreyasdhekanes-projects.vercel.app"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials(); 
     });
 });
 builder.Services.AddSignalR();
@@ -82,9 +83,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+app.UseCors("AllowAngular");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowAngular");
 app.MapHub<Pulsar.API.Hubs.PulsarHub>("/hubs/pulsar");
 app.MapControllers();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
