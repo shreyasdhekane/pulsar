@@ -17,7 +17,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins(
+    "http://localhost:4200",
+    "https://pulsar-production-a199.up.railway.app",
+    "https://pulsar-shreyas.vercel.app"
+)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });

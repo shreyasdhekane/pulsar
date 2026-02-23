@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private baseUrl = environment.apiUrl;
+  private baseUrl = 'https://pulsar-production-a199.up.railway.app';
 
   constructor(private http: HttpClient) {}
 
