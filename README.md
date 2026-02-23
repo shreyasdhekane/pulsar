@@ -1,7 +1,7 @@
 # Pulsar v1.0 — First Live Release
 
 **Released:** February 22, 2026  
-**Live Demo:** https://pulsar-of1bjwzg3-shreyasdhekanes-projects.vercel.app  
+**Live Demo:** https://pulsar-bay.vercel.app  
 **Backend:** https://pulsar-production-a199.up.railway.app
 
 ---
@@ -12,7 +12,7 @@ Pulsar is a real-time API health monitoring dashboard. It continuously pings ext
 
 ---
 
-## What's in v0.8
+## What's in v1.0
 
 ### Core Features
 

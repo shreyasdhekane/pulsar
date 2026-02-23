@@ -1,7 +1,6 @@
 <div class="dashboard">
   <nav class="navbar">
     <div class="logo">
-      <div class="logo-icon">⚡</div>
       <h2 class="logo-text">Pulsar</h2>
     </div>
     <div class="nav-right">
@@ -18,6 +17,44 @@
     </div>
   </nav>
 
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker-track">
+      @for (item of tickerItems; track $index) {
+        <span class="ticker-item">
+          <span class="ticker-dot" [style.background]="item.isUp ? '#00ff88' : '#ff4444'"></span>
+          {{ item.name }} {{ item.responseTimeMs }}ms
+        </span>
+      }
+      @for (item of tickerItems; track $index) {
+        <span class="ticker-item">
+          <span class="ticker-dot" [style.background]="item.isUp ? '#00ff88' : '#ff4444'"></span>
+          {{ item.name }} {{ item.responseTimeMs }}ms
+        </span>
+      }
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-text">
+      <div class="hero-badge">Real-time · Global · Free</div>
+      <h1>Monitor your APIs<br /><span class="gradient-text">before they break.</span></h1>
+      <p>
+        Pulsar pings your APIs every 60 seconds from the cloud, tracks response times, and shows you
+        live status — all in one dashboard.
+      </p>
+      <div class="hero-actions">
+        <button class="cta-primary" (click)="onAddEndpointClick()">Start Monitoring →</button>
+        <button class="cta-secondary" (click)="scrollToCards()">View Live Status ↓</button>
+      </div>
+    </div>
+    <div class="hero-map">
+      <div id="world-map"></div>
+    </div>
+  </div>
+
+  <!-- LIVE STATS -->
   @if (stats) {
     <div class="hero-stats">
       <div class="stat-card">
@@ -39,7 +76,7 @@
     </div>
   }
 
-  <div class="section-title">Monitored Endpoints</div>
+  <div class="section-title" id="cards-section">Live Endpoint Status</div>
 
   @if (loading) {
     <div class="loading">Connecting to APIs...</div>
@@ -96,6 +133,6 @@
   }
 
   @if (showAuthModal) {
-    <app-auth-modal (closed)="showAuthModal = false" (success)="onAuthSuccess()"> </app-auth-modal>
+    <app-auth-modal (closed)="showAuthModal = false" (success)="onAuthSuccess()"></app-auth-modal>
   }
 </div>
