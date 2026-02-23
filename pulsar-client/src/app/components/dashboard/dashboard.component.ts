@@ -5,11 +5,13 @@ import { SignalrService } from '../../services/signalr.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SparklineComponent } from '../sparkline/sparkline.component';
+import { AuthService } from '../../services/auth.service';
+import { AuthModalComponent } from '../auth-modal/auth-modal.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [SparklineComponent, DecimalPipe, FormsModule],
+  imports: [SparklineComponent, DecimalPipe, FormsModule, AuthModalComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -17,6 +19,7 @@ export class DashboardComponent implements OnInit {
   endpoints: any[] = [];
   loading = true;
   stats: any = null;
+  showAuthModal = false;
   showModal = false;
   newName = '';
   newUrl = '';
@@ -31,6 +34,7 @@ export class DashboardComponent implements OnInit {
   }
 
   constructor(
+    public auth: AuthService,
     private apiService: ApiService,
     private signalrService: SignalrService,
     private cdr: ChangeDetectorRef,
@@ -103,5 +107,16 @@ export class DashboardComponent implements OnInit {
   }
   goToDetail(id: number) {
     this.router.navigate(['/endpoint', id]);
+  }
+  onAddEndpointClick() {
+    if (!this.auth.isLoggedIn()) {
+      this.showAuthModal = true;
+    } else {
+      this.showModal = true;
+    }
+  }
+  onAuthSuccess() {
+    this.showAuthModal = false;
+    this.showModal = true;
   }
 }

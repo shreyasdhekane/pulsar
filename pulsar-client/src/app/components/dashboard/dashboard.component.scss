@@ -394,7 +394,34 @@
     }
   }
 }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
+.user-name {
+  font-size: 12px;
+  color: #555;
+  font-family: 'DM Mono', monospace;
+}
+
+.sign-btn {
+  font-size: 12px;
+  font-family: 'DM Mono', monospace;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #aaa;
+  padding: 6px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
 @keyframes pulse {
   0%,
   100% {

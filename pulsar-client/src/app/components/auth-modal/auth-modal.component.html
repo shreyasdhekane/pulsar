@@ -1,0 +1,39 @@
+<div class="modal-backdrop" (click)="closed.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closed.emit()">✕</button>
+
+    <div class="modal-header">
+      <div class="logo-icon">⚡</div>
+      <h2>{{ mode === 'login' ? 'Welcome back' : 'Create account' }}</h2>
+      <p>
+        {{
+          mode === 'login' ? 'Sign in to monitor your APIs' : 'Start monitoring your APIs for free'
+        }}
+      </p>
+    </div>
+
+    <div class="form">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="email" placeholder="you@example.com" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" [(ngModel)]="password" placeholder="••••••••" />
+      </div>
+
+      @if (error) {
+        <div class="error">{{ error }}</div>
+      }
+
+      <button class="submit-btn" (click)="submit()" [disabled]="loading">
+        {{ loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account' }}
+      </button>
+    </div>
+
+    <div class="toggle">
+      {{ mode === 'login' ? "Don't have an account?" : 'Already have an account?' }}
+      <span (click)="toggle()">{{ mode === 'login' ? 'Sign up' : 'Sign in' }}</span>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: 'https://pulsar-production-a199.up.railway.app',
 };

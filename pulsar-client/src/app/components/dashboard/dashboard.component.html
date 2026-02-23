@@ -1,11 +1,20 @@
 <div class="dashboard">
   <nav class="navbar">
     <div class="logo">
+      <div class="logo-icon">⚡</div>
       <h2 class="logo-text">Pulsar</h2>
     </div>
-    <div class="nav-badge">
-      <span class="live-dot"></span>
-      Live Monitoring
+    <div class="nav-right">
+      @if (auth.isLoggedIn()) {
+        <span class="user-name">{{ auth.displayName() }}</span>
+        <button class="sign-btn" (click)="auth.logout()">Sign out</button>
+      } @else {
+        <button class="sign-btn" (click)="showAuthModal = true">Sign in</button>
+      }
+      <div class="nav-badge">
+        <span class="live-dot"></span>
+        Live Monitoring
+      </div>
     </div>
   </nav>
 
@@ -65,7 +74,7 @@
         </div>
       }
 
-      <div class="card add-card" (click)="openModal()">
+      <div class="card add-card" (click)="onAddEndpointClick()">
         <div class="add-icon">+</div>
         <p>Monitor custom API</p>
       </div>
@@ -84,5 +93,9 @@
         </div>
       </div>
     </div>
+  }
+
+  @if (showAuthModal) {
+    <app-auth-modal (closed)="showAuthModal = false" (success)="onAuthSuccess()"> </app-auth-modal>
   }
 </div>
