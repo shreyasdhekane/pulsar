@@ -52,25 +52,27 @@ public class AuthController : ControllerBase
     }
 
     private string GenerateToken(User user)
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt__Key"]!));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+{
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+        _config["Jwt__Key"] ?? "16e7c32cd24278ebffd6908a7d853367bf5181739969bade865e0fb4b549a472"));
+    
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(
-            issuer: _config["Jwt__Issuer"],
-            audience: _config["Jwt__Audience"],
-            claims: new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim("displayName", user.DisplayName)
-            },
-            expires: DateTime.UtcNow.AddDays(30),
-            signingCredentials: creds
-        );
+    var token = new JwtSecurityToken(
+        issuer: _config["Jwt__Issuer"] ?? "pulsar-api",
+        audience: _config["Jwt__Audience"] ?? "pulsar-client",
+        claims: new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim("displayName", user.DisplayName)
+        },
+        expires: DateTime.UtcNow.AddDays(30),
+        signingCredentials: creds
+    );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
+    return new JwtSecurityTokenHandler().WriteToken(token);
+}
 }
 
 public record AuthRequest(string Email, string Password);

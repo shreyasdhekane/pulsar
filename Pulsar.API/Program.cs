@@ -31,7 +31,6 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSignalR();
 
-// Better JWT configuration with null handling
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -108,7 +107,7 @@ using (var scope = app.Services.CreateScope())
         db.MonitoredEndpoints.AddRange(
             new MonitoredEndpoint { Name = "OpenAI", Url = "https://status.openai.com/api/v2/status.json", IsFeatured = true, IsPublic = true },
             new MonitoredEndpoint { Name = "GitHub", Url = "https://kctbh9vrtdwd.statuspage.io/api/v2/status.json", IsFeatured = true, IsPublic = true },
-            new MonitoredEndpoint { Name = "Stripe", Url = "https://status.stripe.com/api/v2/summary.json", IsFeatured = true, IsPublic = true },
+            new MonitoredEndpoint { Name = "Vercel", Url = "https://www.vercel-status.com/api/v2/status.json", IsFeatured = true, IsPublic = true },
             new MonitoredEndpoint { Name = "Twilio", Url = "https://status.twilio.com/api/v2/status.json", IsFeatured = true, IsPublic = true },
             new MonitoredEndpoint { Name = "Cloudflare", Url = "https://www.cloudflarestatus.com/api/v2/status.json", IsFeatured = true, IsPublic = true }
         );
