@@ -73,6 +73,7 @@ export class EndpointDetailComponent implements OnInit {
   }
 
   buildUptimeBars() {
+    if (!this.endpoint?.last24Hours) return;
     const bars = [];
     const now = new Date();
     for (let i = 47; i >= 0; i--) {
