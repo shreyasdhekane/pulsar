@@ -134,7 +134,7 @@ public class EndpointsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-public async Task<IActionResult> GetEndpoint(int id)
+public async Task<IActionResult> GetEndpointDetail(int id)
 {
     var endpoint = await _db.MonitoredEndpoints
         .Where(e => e.Id == id)
@@ -143,21 +143,31 @@ public async Task<IActionResult> GetEndpoint(int id)
             e.Id,
             e.Name,
             e.Url,
-            e.IsFeatured,
-            e.IsPublic,
-            e.IntervalSeconds,
             LatestPing = e.PingResults
                 .OrderByDescending(p => p.Timestamp)
                 .Select(p => new { p.StatusCode, p.ResponseTimeMs, p.IsUp, p.Timestamp })
-                .FirstOrDefault()
+                .FirstOrDefault(),
+            UptimePercent = e.PingResults.Any()
+                ? Math.Round(e.PingResults.Count(p => p.IsUp) * 100.0 / e.PingResults.Count(), 1)
+                : 0,
+            AvgResponseTime = e.PingResults.Any()
+                ? Math.Round(e.PingResults.Average(p => (double)p.ResponseTimeMs), 0)
+                : 0,
+            MinResponseTime = e.PingResults.Any()
+                ? e.PingResults.Min(p => p.ResponseTimeMs)
+                : 0,
+            MaxResponseTime = e.PingResults.Any()
+                ? e.PingResults.Max(p => p.ResponseTimeMs)
+                : 0,
+            Last24Hours = e.PingResults
+                .Where(p => p.Timestamp >= DateTime.UtcNow.AddHours(-24))
+                .OrderBy(p => p.Timestamp)
+                .Select(p => new { p.ResponseTimeMs, p.IsUp, p.Timestamp })
+                .ToList()
         })
         .FirstOrDefaultAsync();
 
-    if (endpoint == null)
-    {
-        return NotFound();
-    }
-
+    if (endpoint == null) return NotFound();
     return Ok(endpoint);
 }
 
