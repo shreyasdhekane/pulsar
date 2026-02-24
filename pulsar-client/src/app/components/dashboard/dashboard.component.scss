@@ -596,3 +596,76 @@
     opacity: 0.7;
   }
 }
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 24px 20px;
+  }
+
+  .navbar {
+    margin-bottom: 32px;
+
+    .nav-badge {
+      display: none;
+    }
+
+    .user-name {
+      display: none;
+    }
+  }
+
+  .ticker-wrap {
+    margin: 0 -20px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 48px 0;
+    gap: 32px;
+
+    h1 {
+      font-size: 36px;
+      letter-spacing: -2px;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+
+  .hero-map {
+    display: none;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+
+    .cta-primary,
+    .cta-secondary {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+
+    .stat-card {
+      padding: 16px;
+
+      .stat-value {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    width: calc(100vw - 40px);
+    padding: 24px;
+  }
+}

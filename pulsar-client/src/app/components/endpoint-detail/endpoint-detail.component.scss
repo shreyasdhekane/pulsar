@@ -378,3 +378,63 @@
     opacity: 0.4;
   }
 }
+@media (max-width: 768px) {
+  .detail-page {
+    padding: 24px 20px;
+  }
+
+  .navbar {
+    margin-bottom: 32px;
+  }
+
+  .detail-header {
+    .header-top {
+      h1 {
+        font-size: 28px;
+        letter-spacing: -1px;
+      }
+
+      .status-badge {
+        display: none;
+      }
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+
+    .stat-card {
+      padding: 16px;
+
+      .value {
+        font-size: 24px;
+        letter-spacing: -1px;
+      }
+    }
+  }
+
+  .uptime-section {
+    padding: 16px;
+
+    .uptime-bars {
+      gap: 2px;
+    }
+  }
+
+  .chart-section {
+    padding: 16px;
+
+    canvas {
+      max-height: 200px;
+    }
+  }
+
+  .insights-card {
+    padding: 16px;
+
+    .insights-header {
+      flex-wrap: wrap;
+    }
+  }
+}

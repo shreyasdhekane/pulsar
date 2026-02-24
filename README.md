@@ -1,61 +1,149 @@
-# Pulsar v1.0 — First Live Release
+# Pulsar v2.0 — Intelligent API Health Monitoring
 
-**Released:** February 22, 2026  
+**Released:** March 2026  
 **Live Demo:** https://pulsar-bay.vercel.app  
 **Backend:** https://pulsar-production-a199.up.railway.app
 
 ---
 
-## What is Pulsar?
+## 🚀 What is Pulsar?
 
-Pulsar is a real-time API health monitoring dashboard. It continuously pings external APIs and services, tracks response times, and displays live status updates — all in a clean, professional dark UI.
+Pulsar is a real-time API health monitoring platform that continuously pings external services, tracks response times, detects downtime, and visualizes system health — all in a clean, production-grade dashboard.
+
+Built to simulate how modern DevOps monitoring systems work — powered by a live backend, persistent storage, and real-time updates.
 
 ---
 
-## What's in v1.0
+## ✨ What’s New in v2.0
 
-### Core Features
+Version 2.0 transforms Pulsar from a monitoring dashboard into a structured monitoring platform.
 
-- **Real-time monitoring** — SignalR-powered live updates, no page refresh needed
-- **5 pre-monitored APIs** — OpenAI, GitHub, Stripe, Twilio, Cloudflare
-- **Custom endpoint monitoring** — add any public URL and start tracking it instantly
-- **Hero stats bar** — total endpoints, live count, average response time, incidents at a glance
-- **Sparkline graphs** — per-card response time trend at a glance
+- 🔐 User authentication implemented
+- 🌍 World map with live ping visualization
+- 📜 Incident history timeline
+- 📱 Fully responsive mobile layout
+- ⚡ Performance improvements and UI polish
+- 🧠 Backend structure improvements for scalability
 
-### Detail Page
+---
 
-- 24-hour uptime timeline bar (GitHub-style)
-- Response time graph with per-ping color coding (green = up, red = down)
-- Stats cards: uptime %, average, fastest, and slowest response times
+## 🧩 Core Features
 
-### Design
+### ⚡ Real-Time Monitoring
 
-- Professional dark UI inspired by Vercel and modern SaaS dashboards
+- SignalR-powered live updates .
+- Background PingWorker running every 60 seconds
+- Instant status transitions (UP / DOWN)
+
+### 🌐 Pre-Monitored APIs
+
+Currently tracking:
+
+- OpenAI
+- GitHub
+- Stripe
+- Twilio
+- Cloudflare
+
+### ➕ Custom Endpoint Monitoring
+
+- Add any public URL
+- Immediate tracking begins
+- Persistent storage in PostgreSQL
+
+### 📊 Hero Stats Bar
+
+- Total endpoints
+- Live endpoints
+- Average response time
+- Active incidents
+
+### 📈 Visual Analytics
+
+- Sparkline response time graphs (per endpoint)
+- 24-hour uptime timeline (GitHub-style)
+- Color-coded ping history (green = up, red = down)
+- Response time graph with detailed metrics
+
+### 📜 Incident History Timeline
+
+- Structured downtime event tracking
+- Start time, end time, duration
+- Historical reliability visibility
+
+### 🌍 Live World Map
+
+- Real-time ping visualization
+- Geographic representation of endpoint health
+
+---
+
+## 🎨 Design System
+
+- Professional dark UI inspired by modern SaaS dashboards
 - Glassmorphism cards with gradient accents
 - DM Mono + Sora typography
 - Animated gradient mesh background
+- Fully responsive layout (mobile + desktop)
 
-### Infrastructure
+---
 
-- Backend hosted on **Railway** (.NET 10 + PostgreSQL)
-- Frontend hosted on **Vercel** (Angular 17)
+## 🏗 Architecture
+
+### Backend
+
+- .NET 10
+- PostgreSQL
+- Entity Framework Core
+- SignalR for real-time communication
+- Hosted on Railway
 - Auto-migrations on startup
-- Background PingWorker running every 60 seconds
+- Background worker service for continuous pinging
+
+### Frontend
+
+- Angular 17
+- TypeScript
+- RxJS
+- Hosted on Vercel
 
 ---
 
-## Known Limitations
+## 🛠 Infrastructure Overview
 
-- No authentication yet — all endpoints are public
-- No email/Slack alerts on downtime
-- Mobile layout not fully optimized
+- Live deployment (frontend + backend)
+- Persistent cloud database
+- Real-time WebSocket communication
+- Production-ready structure
 
 ---
 
-## What's Next (v2.0)
+## 📌 Roadmap (v3.0 Ideas)
 
-- User authentication
-- Email/Slack downtime alerts
-- World map with live ping visualization
-- Mobile responsive polish
-- Incident history timeline
+- Multi-region ping testing
+- Public status page generation
+- Advanced analytics dashboard
+- Rate-limiting & performance benchmarking
+- Monitoring groups / teams support
+
+---
+
+## 🧠 Why Pulsar?
+
+Pulsar is a practical full-stack systems project that demonstrates:
+
+- Real-time systems design
+- Background job processing
+- Cloud deployment
+- Database modeling
+- API health analytics
+- Modern frontend architecture
+- Scalable backend structure
+
+---
+
+## 🛰 Status
+
+Pulsar v2.0 is fully live and production deployed.
+
+More iterations coming.
