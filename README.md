@@ -14,7 +14,7 @@ AI-powered insights, and a live world map of global ping activity.
 ## Features
 
 - **Real-time monitoring** — SignalR WebSocket updates, no page refresh needed
-- **AI insights** — Claude API generates natural language health summaries per endpoint
+- **AI insights** — Gemini API generates natural language health summaries per endpoint
 - **Anomaly detection** — flags when response times deviate from baseline
 - **Incident timeline** — automatic downtime detection with duration tracking
 - **p50/p95/p99 analytics** — production-grade response time percentiles
@@ -29,8 +29,8 @@ AI-powered insights, and a live world map of global ping activity.
 | Backend  | C# · .NET 10 · ASP.NET Core · SignalR           |
 | Database | PostgreSQL · Entity Framework Core              |
 | Frontend | Angular 17 · TypeScript · Chart.js · Leaflet.js |
-| AI       | Anthropic Claude API                            |
-| Hosting  | Railway (backend) · Vercel (frontend)           |
+| AI       | Google Gemini API                               |
+| Hosting  | Azure App Service (backend) · Vercel (frontend) |
 
 ## Running Locally
 

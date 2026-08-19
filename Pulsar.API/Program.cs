@@ -34,22 +34,22 @@ builder.Services.AddSignalR();
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        var jwtKey = builder.Configuration["Jwt__Key"];
-        var jwtIssuer = builder.Configuration["Jwt__Issuer"];
-        var jwtAudience = builder.Configuration["Jwt__Audience"];
-        
+        var jwtKey = builder.Configuration["Jwt:Key"];
+        var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+        var jwtAudience = builder.Configuration["Jwt:Audience"];
+
         // Log configuration status
         Console.WriteLine($"JWT Key configured: {!string.IsNullOrEmpty(jwtKey)}");
         Console.WriteLine($"JWT Issuer: {jwtIssuer ?? "NOT SET"}");
         Console.WriteLine($"JWT Audience: {jwtAudience ?? "NOT SET"}");
-        
-        // Fallback for development if not configured
+
         if (string.IsNullOrEmpty(jwtKey))
         {
-            Console.WriteLine("WARNING: Using development JWT key");
-            jwtKey = "16e7c32cd24278ebffd6908a7d853367bf5181739969bade865e0fb4b549a472";
+            throw new InvalidOperationException(
+                "Jwt:Key is not configured. Set it via the Jwt__Key environment variable " +
+                "(or user-secrets locally) — do not hardcode it in appsettings.json.");
         }
-        
+
         options.TokenValidationParameters = new()
         {
             ValidateIssuer = true,

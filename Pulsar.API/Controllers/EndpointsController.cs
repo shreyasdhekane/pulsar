@@ -267,34 +267,38 @@ public async Task<IActionResult> GetInsights(int id)
         Write only the summary, no headers or bullet points.
         """;
 
-    // call Claude API
-    var summary = await CallClaudeAsync(prompt);
+    // call Gemini API
+    var summary = await CallGeminiAsync(prompt);
 
     return Ok(new { summary, incidents, p50, p95, p99, anomaly, anomalyPercent, recentAvg = Math.Round(recentAvg), overallAvg = Math.Round(overallAvg) });
 }
 
-private async Task<string> CallClaudeAsync(string prompt)
+private async Task<string> CallGeminiAsync(string prompt)
 {
     try
     {
+        var apiKey = _config["Gemini:ApiKey"];
         using var client = new HttpClient();
-        client.DefaultRequestHeaders.Add("x-api-key", _config["Claude__ApiKey"]);
-        client.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
+        client.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);
 
         var body = new
         {
-            model = "claude-haiku-4-5-20251001",
-            max_tokens = 200,
-            messages = new[] { new { role = "user", content = prompt } }
+            contents = new[]
+            {
+                new { parts = new[] { new { text = prompt } } }
+            },
+            generationConfig = new { maxOutputTokens = 200 }
         };
 
-        var response = await client.PostAsJsonAsync("https://api.anthropic.com/v1/messages", body);
+        var response = await client.PostAsJsonAsync(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", body);
         var result = await response.Content.ReadFromJsonAsync<JsonElement>();
-        return result.GetProperty("content")[0].GetProperty("text").GetString() ?? "Unable to generate summary.";
+        return result.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0]
+            .GetProperty("text").GetString() ?? "Unable to generate summary.";
     }
     catch (Exception ex)
     {
-        Console.WriteLine("Claude API error: " + ex.Message);
+        Console.WriteLine("Gemini API error: " + ex.Message);
         return "Unable to generate summary at this time.";
     }
 }

@@ -9,7 +9,7 @@ export class SignalrService {
 
   startConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://pulsar-production-a199.up.railway.app/hubs/pulsar')
+      .withUrl('https://pulsar-api-shreyas.azurewebsites.net/hubs/pulsar')
       .withAutomaticReconnect()
       .build();
 

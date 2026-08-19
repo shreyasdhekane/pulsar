@@ -4,6 +4,7 @@
 # .NET
 **/bin/
 **/obj/
+**/.azure/
 *.user
 *.suo
 .vs/
