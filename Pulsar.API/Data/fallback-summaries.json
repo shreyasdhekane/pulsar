@@ -1,0 +1,45 @@
+{
+  "_comment": "Used when the AI provider is unavailable. Placeholders: {name} {uptime} {pings} {p50} {p95} {p99} {incidents} {anomalyPercent}. First scenario whose condition matches wins.",
+  "scenarios": [
+    {
+      "id": "outage",
+      "condition": "uptime < 90",
+      "templates": [
+        "{name} had a rough day: uptime fell to {uptime}% across {pings} checks with {incidents} incident(s). Successful requests still had a median of {p50}ms, so the problem is availability, not speed.",
+        "{name} is unreliable right now at {uptime}% uptime over the last 24 hours ({incidents} incident(s)). When it does respond, p50 is {p50}ms and p99 reaches {p99}ms."
+      ]
+    },
+    {
+      "id": "incident",
+      "condition": "incidents > 0",
+      "templates": [
+        "{name} recovered from {incidents} incident(s) in the last 24 hours and finished at {uptime}% uptime. Typical latency is steady at p50 {p50}ms, with p95 at {p95}ms.",
+        "{name} saw {incidents} brief outage(s) today ({uptime}% uptime). Between them it responded in {p50}ms at the median and {p99}ms at p99."
+      ]
+    },
+    {
+      "id": "anomaly",
+      "condition": "anomaly",
+      "templates": [
+        "{name} is up but running about {anomalyPercent}% slower than its 24-hour baseline. Median is {p50}ms and p95 has climbed to {p95}ms, so it is worth watching.",
+        "Response times for {name} are drifting up, roughly {anomalyPercent}% above normal in the last two hours. p50 is {p50}ms, p95 {p95}ms, p99 {p99}ms, with no downtime."
+      ]
+    },
+    {
+      "id": "slow-tail",
+      "condition": "p99 > p50 * 4",
+      "templates": [
+        "{name} is healthy at {uptime}% uptime, but its tail is long: p50 is {p50}ms while p99 hits {p99}ms. A few slow requests are dragging the worst case.",
+        "{name} has had no downtime, but latency is uneven. Most requests finish near {p50}ms, yet 1 in 100 takes {p99}ms or more."
+      ]
+    },
+    {
+      "id": "healthy",
+      "condition": "default",
+      "templates": [
+        "{name} is healthy: {uptime}% uptime over {pings} checks with no incidents. Latency is consistent at p50 {p50}ms, p95 {p95}ms and p99 {p99}ms.",
+        "All clear for {name} in the last 24 hours. It stayed up {uptime}% of the time and responded in {p50}ms at the median ({p95}ms at p95)."
+      ]
+    }
+  ]
+}

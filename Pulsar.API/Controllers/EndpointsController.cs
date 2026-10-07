@@ -269,11 +269,53 @@ public async Task<IActionResult> GetInsights(int id)
 
     // call Gemini API
     var summary = await CallGeminiAsync(prompt);
+    if (summary is null)
+    {
+        summary = BuildFallbackSummary(endpointName ?? "This endpoint", pings.Count,
+            Math.Round(pings.Count(p => p.IsUp) * 100.0 / pings.Count, 1),
+            p50, p95, p99, incidents.Count, anomaly, anomalyPercent);
+    }
 
     return Ok(new { summary, incidents, p50, p95, p99, anomaly, anomalyPercent, recentAvg = Math.Round(recentAvg), overallAvg = Math.Round(overallAvg) });
 }
 
-private async Task<string> CallGeminiAsync(string prompt)
+private static string BuildFallbackSummary(string name, int pings, double uptime, double p50, double p95,
+    double p99, int incidents, bool anomaly, double anomalyPercent)
+{
+    try
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "Data", "fallback-summaries.json");
+        using var doc = JsonDocument.Parse(System.IO.File.ReadAllText(path));
+        var scenarios = doc.RootElement.GetProperty("scenarios").EnumerateArray().ToList();
+
+        var id = uptime < 90 ? "outage"
+            : incidents > 0 ? "incident"
+            : anomaly ? "anomaly"
+            : p50 > 0 && p99 > p50 * 4 ? "slow-tail"
+            : "healthy";
+
+        var scenario = scenarios.First(s => s.GetProperty("id").GetString() == id);
+        var templates = scenario.GetProperty("templates").EnumerateArray().Select(t => t.GetString()!).ToList();
+        var template = templates[Random.Shared.Next(templates.Count)];
+
+        return template
+            .Replace("{name}", name)
+            .Replace("{uptime}", uptime.ToString("0.#"))
+            .Replace("{pings}", pings.ToString())
+            .Replace("{p50}", p50.ToString("0"))
+            .Replace("{p95}", p95.ToString("0"))
+            .Replace("{p99}", p99.ToString("0"))
+            .Replace("{incidents}", incidents.ToString())
+            .Replace("{anomalyPercent}", anomalyPercent.ToString("0"));
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Fallback summary error: " + ex.Message);
+        return $"{name}: {uptime}% uptime, p50 {p50:0}ms, p95 {p95:0}ms, p99 {p99:0}ms over the last 24 hours.";
+    }
+}
+
+private async Task<string?> CallGeminiAsync(string prompt)
 {
     try
     {
@@ -292,14 +334,15 @@ private async Task<string> CallGeminiAsync(string prompt)
 
         var response = await client.PostAsJsonAsync(
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", body);
+        if (!response.IsSuccessStatusCode) return null;
         var result = await response.Content.ReadFromJsonAsync<JsonElement>();
         return result.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0]
-            .GetProperty("text").GetString() ?? "Unable to generate summary.";
+            .GetProperty("text").GetString();
     }
     catch (Exception ex)
     {
         Console.WriteLine("Gemini API error: " + ex.Message);
-        return "Unable to generate summary at this time.";
+        return null;
     }
 }
 }
