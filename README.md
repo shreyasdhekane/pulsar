@@ -7,7 +7,7 @@ AI-powered insights, and a live world map of global ping activity.
 
 ---
 
-![Dashboard Screenshot](screenshot.png)
+![Dashboard Screenshot](Screenshot.png)
 
 ---
 
