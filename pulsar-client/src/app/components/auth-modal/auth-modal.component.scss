@@ -36,7 +36,7 @@
   right: 16px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #666;
+  color: #b4b4be;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -75,7 +75,7 @@
   }
 
   p {
-    color: #555;
+    color: #a8a8b3;
     font-size: 13px;
     font-family: 'DM Mono', monospace;
   }
@@ -94,7 +94,7 @@
 
   label {
     font-size: 11px;
-    color: #444;
+    color: #9a9aa6;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-family: 'DM Mono', monospace;
@@ -115,7 +115,7 @@
       border-color: #6c63ff;
     }
     &::placeholder {
-      color: #333;
+      color: #8d8d99;
     }
   }
 }
@@ -156,7 +156,7 @@
   text-align: center;
   margin-top: 24px;
   font-size: 13px;
-  color: #444;
+  color: #9a9aa6;
   font-family: 'DM Mono', monospace;
 
   span {

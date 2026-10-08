@@ -134,19 +134,19 @@ export class EndpointDetailComponent implements OnInit {
             backgroundColor: '#0e0e14',
             borderColor: 'rgba(255,255,255,0.1)',
             borderWidth: 1,
-            titleColor: '#888',
+            titleColor: '#c8c8d0',
             bodyColor: '#fff',
             padding: 12,
           },
         },
         scales: {
           x: {
-            ticks: { color: '#333', maxTicksLimit: 8, font: { family: 'DM Mono' } },
+            ticks: { color: '#8d8d99', maxTicksLimit: 8, font: { family: 'DM Mono' } },
             grid: { color: 'rgba(255,255,255,0.03)' },
             border: { color: 'rgba(255,255,255,0.05)' },
           },
           y: {
-            ticks: { color: '#333', font: { family: 'DM Mono' } },
+            ticks: { color: '#8d8d99', font: { family: 'DM Mono' } },
             grid: { color: 'rgba(255,255,255,0.03)' },
             border: { color: 'rgba(255,255,255,0.05)' },
           },
