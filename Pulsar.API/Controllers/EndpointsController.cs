@@ -38,7 +38,7 @@ public class EndpointsController : ControllerBase
                     .Select(p => new { p.StatusCode, p.ResponseTimeMs, p.IsUp, p.Timestamp })
                     .FirstOrDefault(),
                 UptimePercent = e.PingResults.Any()
-                    ? Math.Round(e.PingResults.Count(p => p.IsUp) * 100.0 / e.PingResults.Count(), 1)
+                    ? Math.Round(e.PingResults.Count(p => p.IsUp) * 100.0 / Math.Max(e.PingResults.Count(), 1), 1)
                     : 0,
                 RecentPings = e.PingResults
                     .OrderByDescending(p => p.Timestamp)
@@ -93,7 +93,7 @@ public class EndpointsController : ControllerBase
                     .Select(p => new { p.StatusCode, p.ResponseTimeMs, p.IsUp, p.Timestamp })
                     .FirstOrDefault(),
                 UptimePercent = e.PingResults.Any()
-                    ? Math.Round(e.PingResults.Count(p => p.IsUp) * 100.0 / e.PingResults.Count(), 1)
+                    ? Math.Round(e.PingResults.Count(p => p.IsUp) * 100.0 / Math.Max(e.PingResults.Count(), 1), 1)
                     : 0,
                 RecentPings = e.PingResults
                     .OrderByDescending(p => p.Timestamp)
@@ -148,7 +148,7 @@ public async Task<IActionResult> GetEndpointDetail(int id)
                 .Select(p => new { p.StatusCode, p.ResponseTimeMs, p.IsUp, p.Timestamp })
                 .FirstOrDefault(),
             UptimePercent = e.PingResults.Any()
-                ? Math.Round(e.PingResults.Count(p => p.IsUp) * 100.0 / e.PingResults.Count(), 1)
+                ? Math.Round(e.PingResults.Count(p => p.IsUp) * 100.0 / Math.Max(e.PingResults.Count(), 1), 1)
                 : 0,
             AvgResponseTime = e.PingResults.Any()
                 ? Math.Round(e.PingResults.Average(p => (double)p.ResponseTimeMs), 0)
