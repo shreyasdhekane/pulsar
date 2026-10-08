@@ -53,14 +53,16 @@ public class AuthController : ControllerBase
 
     private string GenerateToken(User user)
 {
-    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-        _config["Jwt__Key"] ?? "16e7c32cd24278ebffd6908a7d853367bf5181739969bade865e0fb4b549a472"));
-    
+    // Must read the same settings as the validation in Program.cs (Jwt:Key etc.)
+    var jwtKey = _config["Jwt:Key"]
+        ?? throw new InvalidOperationException("Jwt:Key is not configured.");
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
     var token = new JwtSecurityToken(
-        issuer: _config["Jwt__Issuer"] ?? "pulsar-api",
-        audience: _config["Jwt__Audience"] ?? "pulsar-client",
+        issuer: _config["Jwt:Issuer"] ?? "pulsar-api",
+        audience: _config["Jwt:Audience"] ?? "pulsar-client",
         claims: new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
