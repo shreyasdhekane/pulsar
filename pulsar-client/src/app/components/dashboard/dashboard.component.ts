@@ -203,7 +203,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getTimeAgo(timestamp: string): string {
     if (!timestamp) return 'Never';
-    const seconds = Math.floor((Date.now() - new Date(timestamp).getTime()) / 1000);
+    // clamp at 0: a slightly slow client clock would otherwise show "-6s ago"
+    const seconds = Math.max(0, Math.floor((Date.now() - new Date(timestamp).getTime()) / 1000));
     if (seconds < 60) return `${seconds}s ago`;
     return `${Math.floor(seconds / 60)}m ago`;
   }
