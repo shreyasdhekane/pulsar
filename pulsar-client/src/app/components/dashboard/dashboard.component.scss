@@ -187,6 +187,11 @@
   z-index: 1;
 }
 
+// space between a card grid and the section heading that follows it
+.grid + .section-title {
+  margin-top: 48px;
+}
+
 // CARD
 .card {
   background: rgba(255, 255, 255, 0.02);

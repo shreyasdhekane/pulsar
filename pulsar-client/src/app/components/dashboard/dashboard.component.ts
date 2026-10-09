@@ -100,6 +100,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // featured services from the server, plus the signed-in user's own endpoints
+  get monitoredCount(): number {
+    const own = this.auth.isLoggedIn() ? this.myEndpoints.length : 0;
+    return (this.stats?.totalEndpoints ?? 0) + own;
+  }
+
   loadMyEndpoints() {
     this.apiService.getMyEndpoints().subscribe({
       next: (data) => {
